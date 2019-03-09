@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>HTML Custom Element</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+    body {
+        background: #F7F7F7;
+    }
+
+    custom-element {
+        display: inline-block;
+        margin: 0.5em;
+        border-radius: 3px;
+        background: #FFF;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+        font-family: Helvetica, arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    custom-element::shadow .product-img {
+        cursor: pointer;
+        background: #FFF;
+        margin: 0.5em;
+    }
+
+    custom-element::shadow .product-name {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        color: #08C;
+        border-top: 1px solid #EEE;
+        font-weight: bold;
+        padding: 0.75em 0;
+    }
+</style>
+
+<body>
+    <custom-element price="600" description="Shirt for men" data-img="https://www.dhresource.com/0x0s/f2-albu-g4-M00-A2-15-rBVaEFms-8SAZYqmAAFE_5kFxSs048.jpg/wholesale-irregular-shirt-men-2017-new-long.jpg"></custom-element>
+    <custom-element price= "400" description="T Shirt for men" data-img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6asRLaNbtcnE9_nsPTlMXHUVXwkGN5YmVIaAV0ftF8EZcdgjuow"></custom-element>
+    <custom-element price="700" description="Shirt for women"  data-img="https://images-na.ssl-images-amazon.com/images/I/51ML4gPEUOL._UX385_.jpg"></custom-element>
+</body>
+<script>
+    // Creating a HTML Custom element using document.registerElement API which show the details of a product.
+
+    // Creating an object based on HTMLElement prototype
+    var customElement = Object.create(HTMLElement.prototype);
+
+
+    // After object creation setting up the content of element
+    customElement.createdCallback = function () {
+        // Creating a shadow root
+        var shadow = this.createShadowRoot();
+        // Create a standard img element and set it's attributes.
+        var img = document.createElement('img');
+        img.alt = this.getAttribute('data-name');
+        img.src = this.getAttribute('data-img');
+        img.width = '150';
+        img.height = '150';
+        img.className = 'product-img';
+
+        // Add the image to the Shadow Root.
+        shadow.appendChild(img);
+
+        // Add an event listener to the image.
+        img.addEventListener('click',  (e) => {
+            window.location = this.getAttribute('data-url');
+        });
+
+        // Create a br element
+        var br = document.createElement('br');
+        shadow.appendChild(br);
+
+        // Create a p tag
+        var p = document.createElement('p');
+        p.innerText = this.getAttribute('description');
+        shadow.appendChild(p);
+
+        var label = document.createElement('label');
+        label.innerText = 'Price:- ' + this.getAttribute('price');
+        shadow.appendChild(label);
+
+        // // Create a link to the product.
+        // var link = document.createElement('a');
+        // link.innerText = this.getAttribute('data-name');
+        // link.href = this.getAttribute('data-url');
+        // link.className = 'product-name';
+
+        // // Add the link to the Shadow Root.
+        // shadow.appendChild(link);
+    }
+
+    // Register the new element.
+    var customElement = document.registerElement('custom-element', {
+        prototype: customElement
+    });
+</script>
+
+</html>
